@@ -6,12 +6,13 @@
   const publicKey = String(
   config.SUPABASE_PUBLISHABLE_KEY || config.SUPABASE_ANON_KEY || "",
 ).trim();
-  const isPlaceholder =
-    !url ||
-    !anonKey ||
-    url.includes("YOUR_SUPABASE") ||
-    anonKey.includes("YOUR_SUPABASE") ||
-    !/^https:\/\//i.test(url);
+const isPlaceholder =
+  !url ||
+  !publicKey ||
+  url.includes("YOUR_SUPABASE") ||
+  publicKey.includes("YOUR_SUPABASE") ||
+  publicKey === "YOUR_PUBLISHABLE_KEY" ||
+  !/^https:\/\//i.test(url);
 
   let client = null;
   let initialisationError = null;
