@@ -3,7 +3,9 @@
 
   const config = window.KAYAM_CONFIG || {};
   const url = String(config.SUPABASE_URL || "").trim();
-  const anonKey = String(config.SUPABASE_ANON_KEY || "").trim();
+  const publicKey = String(
+  config.SUPABASE_PUBLISHABLE_KEY || config.SUPABASE_ANON_KEY || "",
+).trim();
   const isPlaceholder =
     !url ||
     !anonKey ||
