@@ -2832,3 +2832,30 @@ body[data-page="home"] .hero__copy {
   .product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .category-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
+
+
+/* Transparent vector wordmark sizing */
+.brand__logo--header,
+.brand--drawer .brand__logo {
+  width: 184px;
+  height: 48px;
+  object-fit: contain;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.footer-brand__logo {
+  width: 205px;
+  height: 56px;
+  object-fit: contain;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+@media (max-width: 899px) {
+  .brand__logo--header { width: 148px; height: 40px; }
+  .brand--drawer .brand__logo { width: 184px; height: 48px; }
+  .footer-brand__logo { width: 184px; height: 50px; }
+}
