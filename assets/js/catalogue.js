@@ -436,7 +436,6 @@
       card.querySelectorAll("[data-add-product]").forEach(function (button) {
         button.dataset.addVariant = variantId;
         button.disabled = !available;
-        button.textContent = button.classList.contains("product-card__quick-add") ? "" : "Add to cart";
       });
     });
     container.addEventListener("click", function (event) {
