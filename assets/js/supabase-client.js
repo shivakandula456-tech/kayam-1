@@ -20,7 +20,7 @@ const isPlaceholder =
   if (!isPlaceholder) {
     if (window.supabase && typeof window.supabase.createClient === "function") {
       try {
-        client = window.supabase.createClient(url, anonKey, {
+        client = window.supabase.createClient(url, publicKey, {
           auth: {
             persistSession: true,
             autoRefreshToken: true,
@@ -46,7 +46,7 @@ const isPlaceholder =
   function getClient() {
     if (!client) {
       throw new ConfigurationError(
-        "The store database has not been connected yet. Add your Supabase project URL and public anon key in assets/js/config.js.",
+        "The store database has not been connected yet. Add your Supabase project URL and publishable API key in assets/js/config.js.",
       );
     }
     return client;
