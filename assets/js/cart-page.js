@@ -68,6 +68,7 @@
 
   function summaryMarkup() {
     const canCheckout = cartState.canCheckout;
+    const hasDemoPrices = cartState.lines.some((line) => line.variant && line.variant.isDemo);
     const blocked = cartState.hasUnavailable
       ? "Remove unavailable items to continue."
       : cartState.hasPriceChanges
@@ -88,6 +89,7 @@
         <div class="summary-row"><dt>Delivery charges</dt><dd>To be confirmed</dd></div>
         <div class="summary-row summary-row--total"><dt>Final payable</dt><dd>Confirmed on WhatsApp</dd></div>
       </dl>
+      ${hasDemoPrices ? '<p class="summary-note demo-price-note">Sample prices are for demonstration only. KAYAM SPICES must confirm or replace them in Admin before live orders can be accepted.</p>' : ""}
       <p class="summary-note">Delivery availability, delivery charges, final payable amount, and payment arrangements will be confirmed by KAYAM SPICES through WhatsApp. Payment is not collected on this website.</p>
       ${action}
       <a class="btn btn--outline btn--block" style="margin-top: .5rem;" href="shop.html">Continue shopping</a>
