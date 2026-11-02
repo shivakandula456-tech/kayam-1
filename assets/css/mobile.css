@@ -2718,7 +2718,7 @@ body[data-page="home"] .hero__copy {
 .spice-film-section__video {
   display: block;
   width: 100%;
-  aspect-ratio: 2 / 3;
+  aspect-ratio: 9 / 16;
   max-height: 600px;
   border-radius: 13px;
   background: #2b281e;
