@@ -77,7 +77,7 @@ For a new project, open the Supabase SQL editor and run the complete
 - the public `product-images` Storage bucket and storage policies
 - the starting categories and product names
 
-The seed product names intentionally have no weights, prices, stock, or images.
+The seed product names intentionally have no weights, prices, stock, or images. After the schema, run `supabase/demo_catalogue.sql` to add temporary sample pack sizes and prices for all 11 seeded products. These variants carry `is_demo=true`; the order RPC blocks orders using them until an administrator confirms the values.
 
 For an existing installation created from an older version of the schema, apply the
 new `admin_profiles_self_update` policy and the related grants from
@@ -85,6 +85,10 @@ new `admin_profiles_self_update` policy and the related grants from
 is in the RLS/grants section around `admin_profiles`. The file uses
 `create table if not exists`, so it does not migrate changed columns in an existing
 database by itself.
+
+### 2A. Add demonstration weights and prices
+
+Run the complete `supabase/demo_catalogue.sql` file after the main schema. It creates 100 g, 250 g, and 500 g sample variants for each seeded product. The prices are examples only. Each is flagged as a sample price and is rejected by the order RPC until an administrator confirms/replaces it in Admin > Products.
 
 ### 3. Create the first administrator
 
