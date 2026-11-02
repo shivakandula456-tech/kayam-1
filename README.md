@@ -13,9 +13,8 @@ collected by this website.
   editor, category manager, and account settings are implemented.
 - The responsive UI, navigation, contact handoff, catalogue fallbacks, and static
   integrity checks pass local QA. See `TEST_REPORT.md`.
-- `assets/js/config.js` still contains Supabase placeholders, so live catalogue,
-  authentication, order, and admin operations are not yet connected.
-- While Supabase is unconfigured, the storefront uses a local 11-product catalogue with five categories. Prices, weights, stock and ingredients remain unconfigured; Add to Cart stays unavailable until real variants are published.
+- `assets/js/config.js` now contains the Supabase project URL and browser-safe publishable key. Live catalogue, authentication, order, and administrator operations still require database schema, RLS, administrator-profile, and real catalogue setup to be verified.
+- Until the live Supabase catalogue is populated with verified product variants, the storefront uses a local 11-product catalogue with five categories. Prices, weights, stock and ingredients remain unconfigured; Add to Cart stays unavailable until real variants are published.
 - Product/category photography is mapped in `assets/js/catalogue.js` and `assets/js/home.js`; stock sources and licence notes are recorded in `IMAGE_SOURCE_MANIFEST.md`. Product photos are ingredient/food-context photography, not photos of finished KAYAM packaging.
 - When Supabase is configured, its live catalogue is authoritative. A configured-but-failing request shows an error rather than falling back to stale static data. Until approved product images are uploaded, catalogue entries use temporary Pexels food/ingredient photography.
 - Product weights, prices, stock, descriptions, ingredients, and images have not been
@@ -63,9 +62,9 @@ collected by this website.
 
 ### 1. Create the project
 
-Create a Supabase project and keep the project URL and public anon key available.
-The anon key is designed for browser use when Row Level Security is enabled. Never put
-the service-role key in this repository or in browser code.
+Create a Supabase project and keep the project URL and publishable API key available.
+The publishable key is designed for browser use when Row Level Security is enabled. Never put
+the secret key or service-role key in this repository or in browser code.
 
 ### 2. Run the schema
 
@@ -116,7 +115,7 @@ Edit `assets/js/config.js`:
 ```js
 window.KAYAM_CONFIG = Object.freeze({
   SUPABASE_URL: "https://your-project.supabase.co",
-  SUPABASE_ANON_KEY: "your-public-anon-key",
+  SUPABASE_PUBLISHABLE_KEY: "sb_publishable_your-project-publishable-key",
   WHATSAPP_NUMBER: "917888060231",
   CONTACT_EMAIL: "anikhindi.suchi@gmail.com",
   STORAGE_BUCKET: "product-images",
@@ -194,7 +193,8 @@ checkout request is retried.
 ## Pre-launch checklist
 
 - [ ] Apply the latest schema and confirm the administrator self-update policy/grant.
-- [ ] Add real Supabase URL and anon key.
+- [x] Add Supabase project URL and publishable browser key to the frontend configuration.
+- [ ] Verify database schema, RLS, Storage, administrator profile, and live order flow.
 - [ ] Create the first Auth user and `admin_profiles` row.
 - [ ] Enter confirmed product details, weights, prices, stock, and images.
 - [ ] Test sign-in, catalogue CRUD, uploads, checkout, duplicate prevention, status
