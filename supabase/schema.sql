@@ -47,6 +47,9 @@ create table if not exists public.product_variants (
   constraint product_variants_sale_price_check check (sale_price is null or sale_price <= price)
 );
 
+alter table public.product_variants
+  add column if not exists is_demo boolean not null default false;
+
 create table if not exists public.product_images (
   id uuid primary key default gen_random_uuid(),
   product_id uuid not null references public.products(id) on delete cascade,
@@ -351,6 +354,7 @@ begin
       v.track_stock,
       v.stock_quantity,
       v.is_active as variant_is_active,
+      v.is_demo,
       v.weight_value,
       v.weight_unit
     from pg_temp._kayam_order_input i
@@ -359,6 +363,10 @@ begin
     order by v.id
     for update of v
   loop
+    if v_variant.is_demo is true then
+      raise exception 'DEMO_PRICE: The selected weight still has a demonstration price. KAYAM SPICES must confirm its price in the admin area before live orders can be accepted.';
+    end if;
+
     if v_variant.product_is_active is not true
        or v_variant.variant_is_active is not true
        or v_variant.linked_product_id <> v_variant.product_id then
