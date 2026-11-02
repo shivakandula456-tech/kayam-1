@@ -273,6 +273,14 @@
     if (noteNode) noteNode.textContent = catalogue.products.some((product) => product.hasVariants)
       ? "Current catalogue prices"
       : "";
+    const demoNotice = document.getElementById("shop-demo-notice");
+    const hasDemoPrices = Boolean(catalogue.isDemoMode || catalogue.products.some((product) => product.hasDemoPrices));
+    if (demoNotice) {
+      demoNotice.hidden = !hasDemoPrices;
+      demoNotice.innerHTML = hasDemoPrices
+        ? `<div class="catalogue-demo-banner" role="status"><span class="catalogue-demo-banner__mark" aria-hidden="true">i</span><div><strong>Sample weights and prices are active.</strong><span>Demonstration values only. Replace or confirm every pack size and price in Admin > Products before accepting live orders.</span></div></div>`
+        : "";
+    }
     if (!filteredProducts.length) {
       container.innerHTML = `<div class="empty-state">
         <span class="empty-state__icon">${Kayam.icon("search")}</span>

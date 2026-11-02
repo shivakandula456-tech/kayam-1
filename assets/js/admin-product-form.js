@@ -58,6 +58,7 @@
       track_stock: true,
       stock_quantity: 0,
       is_active: true,
+      is_demo: false,
     };
   }
 
@@ -189,6 +190,9 @@
             <label class="admin-check"><input type="checkbox" data-variant-field="is_active"${
               variant.is_active ? " checked" : ""
             }> Active</label>
+            <label class="admin-check" style="margin-top:.35rem;color:#9a4a25;"><input type="checkbox" data-variant-field="is_demo"${
+              variant.is_demo ? " checked" : ""
+            }> Sample price — confirm/replace before orders</label>
           </div>
           <button class="admin-variant-row__remove" type="button" data-remove-variant="${Admin.escapeHTML(
             variant.id,
@@ -360,6 +364,7 @@
         track_stock: trackStock,
         stock_quantity: stock,
         is_active: row.querySelector('[data-variant-field="is_active"]').checked,
+        is_demo: row.querySelector('[data-variant-field="is_demo"]').checked,
         display_order: result.length,
       });
     }
@@ -863,7 +868,7 @@
         ? client
             .from("products")
             .select(
-              "id,name,slug,category_id,short_description,description,ingredients,is_active,is_featured,display_order,product_variants(id,weight_value,weight_unit,price,sale_price,track_stock,stock_quantity,is_active,display_order),product_images(id,storage_path,alt_text,display_order)",
+              "id,name,slug,category_id,short_description,description,ingredients,is_active,is_featured,display_order,product_variants(id,weight_value,weight_unit,price,sale_price,track_stock,stock_quantity,is_active,is_demo,display_order),product_images(id,storage_path,alt_text,display_order)",
             )
             .eq("id", state.productId)
             .maybeSingle()

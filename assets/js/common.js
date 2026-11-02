@@ -326,7 +326,7 @@
       <header class="site-header">
         <div class="container--wide header-inner">
           <a class="brand" href="index.html" aria-label="KAYAM SPICES home">
-            <img class="brand__logo brand__logo--header" src="assets/images/kayam-spices-logo.jpeg" alt="KAYAM SPICES" width="859" height="655" decoding="async">
+            <img class="brand__logo brand__logo--header" src="assets/images/kayam-logo-transparent.webp" alt="KAYAM SPICES" width="325" height="325" decoding="async">
           </a>
           <nav class="primary-nav" aria-label="Primary navigation">
             <ul class="primary-nav__list">${navMarkup}</ul>
@@ -344,7 +344,7 @@
         <div class="nav-drawer__panel">
           <div class="nav-drawer__top">
             <a class="brand brand--drawer" href="index.html" aria-label="KAYAM SPICES home">
-              <img class="brand__logo" src="assets/images/kayam-spices-logo.jpeg" alt="KAYAM SPICES" width="859" height="655" decoding="async">
+              <img class="brand__logo" src="assets/images/kayam-logo-transparent.webp" alt="KAYAM SPICES" width="325" height="325" decoding="async">
             </a>
             <button class="nav-drawer__close" type="button" data-menu-close aria-label="Close navigation menu">${icon("close")}</button>
           </div>
@@ -368,9 +368,9 @@
       <div class="container footer-main">
         <div class="footer-brand">
           <div class="footer-brand__lockup">
-            <img class="footer-brand__logo" src="assets/images/kayam-spices-logo.jpeg" alt="KAYAM SPICES" width="859" height="655" loading="lazy" decoding="async">
+            <img class="footer-brand__logo" src="assets/images/kayam-logo-transparent.webp" alt="KAYAM SPICES" width="325" height="325" loading="lazy" decoding="async">
           </div>
-          <p>Pure spices and traditional Indian blends for the everyday table. Browse the pantry, add your favourites to the website cart, and confirm delivery details with us on WhatsApp.</p>
+          <p>Explore spice powders, traditional masalas, premixes and podis. Choose your pack size, add products to your cart, and confirm delivery with us on WhatsApp.</p>
         </div>
         <div class="footer-col">
           <h2>Explore</h2>

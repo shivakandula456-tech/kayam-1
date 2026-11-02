@@ -68,6 +68,7 @@
   }
 
   function summaryMarkup() {
+    const hasDemoPrices = cartState.lines.some((line) => line.variant && line.variant.isDemo);
     return `<aside class="summary-card checkout-summary" aria-label="Order summary">
       <h2 class="summary-card__title">Order summary</h2>
       <div class="checkout-summary__items">
@@ -91,6 +92,7 @@
         <div class="summary-row"><dt>Delivery charges</dt><dd>To be confirmed</dd></div>
         <div class="summary-row summary-row--total"><dt>Final payable</dt><dd>Pending confirmation</dd></div>
       </dl>
+      ${hasDemoPrices ? '<p class="summary-note demo-price-note">Sample prices are active. Confirm or replace them in Admin before customers can submit an order.</p>' : ""}
       <p class="summary-note">Delivery availability, delivery charges, final payable amount, and payment arrangements will be confirmed by KAYAM SPICES through WhatsApp.</p>
       <a class="text-link" href="cart.html" style="margin-top: 1rem; display: inline-flex;">Edit cart</a>
       <div class="trust-line">${Kayam.icon("shield")}<span>No payment is collected on this website. Your order is saved as pending confirmation before WhatsApp opens.</span></div>
@@ -143,8 +145,8 @@
               <div>Delivery availability, delivery charges, final payable amount, and payment arrangements will be confirmed by KAYAM SPICES through WhatsApp. Your order will be saved with a pending-confirmation status. Payment is arranged separately.</div>
             </div>
             <div class="stack" style="margin-top: 1rem;">
-              <button class="btn btn--dark btn--large btn--block" type="submit" id="place-order-button">Save order &amp; continue to WhatsApp</button>
-              <p class="field__hint" style="text-align: center;">WhatsApp opens only after the order has been saved successfully.</p>
+              <button class="btn btn--dark btn--large btn--block" type="submit" id="place-order-button"${cartState.lines.some((line) => line.variant && line.variant.isDemo) ? " disabled" : ""}>${cartState.lines.some((line) => line.variant && line.variant.isDemo) ? "Waiting for confirmed prices" : "Save order &amp; continue to WhatsApp"}</button>
+              <p class="field__hint" style="text-align: center;">${cartState.lines.some((line) => line.variant && line.variant.isDemo) ? "Sample prices must be replaced or confirmed by the administrator before this order can be submitted." : "WhatsApp opens only after the order has been saved successfully."}</p>
             </div>
           </section>
         </form>
@@ -313,6 +315,15 @@
         renderBlocked({
           title: "Your cart has changed",
           text: "The cart changed in another tab or window. Review the latest cart before placing the order.",
+          link: true,
+        });
+        submitting = false;
+        return;
+      }
+      if (freshState.lines.some((line) => line.variant && line.variant.isDemo)) {
+        renderBlocked({
+          title: "Sample prices need confirmation",
+          text: "This cart still contains demonstration prices. Replace or confirm each selected weight and price in Admin > Products before accepting live orders.",
           link: true,
         });
         submitting = false;

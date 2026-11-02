@@ -36,6 +36,38 @@
     { slug: "groundnut-chutney-powder", name: "Groundnut Chutney Powder", category_slug: "podi-chutney-powders", short_description: "A groundnut-style chutney powder for everyday meals and snacks.", description: "Groundnut Chutney Powder from the KAYAM SPICES pantry. Final weight options, price, stock and product details will be published when confirmed.", is_featured: false, display_order: 11, imagePath: pexelsImageUrl(30107827, 1200), altText: "A rustic bowl of whole groundnuts, shown as an ingredient reference for groundnut chutney powder." },
   ];
 
+  const DEMO_PRICES = {
+    "chilli-powder": [[100, 80], [250, 175], [500, 330]],
+    "turmeric-powder": [[100, 65], [250, 150], [500, 280]],
+    "goda-masala": [[100, 110], [250, 255], [500, 490]],
+    "sambar-premix": [[100, 90], [250, 210], [500, 400]],
+    "rasam-premix": [[100, 85], [250, 195], [500, 375]],
+    "chicken-masala": [[100, 100], [250, 230], [500, 445]],
+    "meat-masala": [[100, 110], [250, 255], [500, 490]],
+    "biryani-masala": [[100, 120], [250, 275], [500, 530]],
+    "garlic-podi": [[100, 95], [250, 220], [500, 420]],
+    "gunpowder-podi": [[100, 90], [250, 205], [500, 395]],
+    "groundnut-chutney-powder": [[100, 80], [250, 185], [500, 350]],
+  };
+
+  function makeDemoVariants(product) {
+    return (DEMO_PRICES[product.slug] || []).map(function (entry, index) {
+      return {
+        id: `demo-${product.slug}-${entry[0]}g`,
+        product_id: `static-${product.slug}`,
+        weight_value: entry[0],
+        weight_unit: "g",
+        price: entry[1],
+        sale_price: null,
+        track_stock: false,
+        stock_quantity: 0,
+        is_active: true,
+        is_demo: true,
+        display_order: index + 1,
+      };
+    });
+  }
+
   class CatalogueError extends Error {
     constructor(message, code, original) {
       super(message);
@@ -89,6 +121,7 @@
       stockQuantity,
       inStock: !trackStock || stockQuantity > 0,
       displayOrder: Number(variant.display_order) || 0,
+      isDemo: Boolean(variant.is_demo),
     };
   }
 
@@ -143,6 +176,7 @@
       lowestRegularPricePaise: lowest ? lowest.pricePaise : null,
       onSale: Boolean(lowest && lowest.onSale),
       isOutOfStock: variants.length > 0 && availableVariants.length === 0,
+      hasDemoPrices: variants.some((variant) => variant.isDemo),
       displayOrder: Number(product.display_order) || 0,
     };
   }
@@ -170,53 +204,68 @@
           is_active: true,
         } : null,
         is_active: true,
-        product_variants: [],
+        product_variants: makeDemoVariants(item),
         product_images: [],
       });
     });
-    return { categories, products, source: "static" };
+    return { categories, products, source: "demo", isDemoMode: true };
   }
 
   async function fetchCatalogue(options) {
     const opts = options || {};
     if (!window.KayamDB || !window.KayamDB.isConfigured()) {
-      // Keep the storefront populated before Supabase is configured.
-      // A configured-but-failing Supabase request still shows an error; it never falls back to stale data.
       return buildStaticCatalogue();
     }
-    const client = window.KayamDB.getClient();
-    const categoryRequest = client
-      .from("categories")
-      .select("id,name,slug,description,is_active,display_order")
-      .eq("is_active", true)
-      .order("display_order", { ascending: true })
-      .order("name", { ascending: true });
-    const productRequest = client
-      .from("products")
-      .select(
-        "id,category_id,name,slug,short_description,description,ingredients,is_active,is_featured,display_order,created_at,updated_at,categories(id,name,slug,is_active),product_variants(id,product_id,weight_value,weight_unit,price,sale_price,track_stock,stock_quantity,is_active,display_order),product_images(id,product_id,storage_path,alt_text,display_order)",
-      )
-      .eq("is_active", true)
-      .order("display_order", { ascending: true })
-      .order("name", { ascending: true });
 
-    const [categoryResult, productResult] = await Promise.all([categoryRequest, productRequest]);
-    if (categoryResult.error || productResult.error) {
-      const error = categoryResult.error || productResult.error;
-      throw new CatalogueError(
-        "We could not load the spice catalogue. Please check your connection and try again.",
-        "FETCH_FAILED",
-        error,
-      );
+    try {
+      const client = window.KayamDB.getClient();
+      const categoryRequest = client
+        .from("categories")
+        .select("id,name,slug,description,is_active,display_order")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true })
+        .order("name", { ascending: true });
+      const productRequest = client
+        .from("products")
+        .select(
+          "id,category_id,name,slug,short_description,description,ingredients,is_active,is_featured,display_order,created_at,updated_at,categories(id,name,slug,is_active),product_variants(id,product_id,weight_value,weight_unit,price,sale_price,track_stock,stock_quantity,is_active,is_demo,display_order),product_images(id,product_id,storage_path,alt_text,display_order)",
+        )
+        .eq("is_active", true)
+        .order("display_order", { ascending: true })
+        .order("name", { ascending: true });
+
+      const [categoryResult, productResult] = await Promise.all([categoryRequest, productRequest]);
+      if (categoryResult.error || productResult.error) {
+        throw categoryResult.error || productResult.error;
+      }
+
+      const categories = (categoryResult.data || []).map(normalizeCategory);
+      const rawProducts = productResult.data || [];
+      const products = rawProducts
+        .filter(function (product) {
+          return !product.category_id || categories.some((category) => category.id === product.category_id);
+        })
+        .map(normalizeProduct);
+
+      const hasAnyConfiguredVariants = products.some((product) => product.variants.length > 0);
+      if (!categories.length || !products.length || !hasAnyConfiguredVariants) {
+        const demo = buildStaticCatalogue();
+        demo.fallbackReason = "The live catalogue has not been populated with sellable weight and price options yet.";
+        return demo;
+      }
+
+      return {
+        categories,
+        products,
+        source: "supabase",
+        isDemoMode: products.some((product) => product.hasDemoPrices),
+      };
+    } catch (error) {
+      console.warn("KAYAM SPICES is displaying the sample catalogue until Supabase is ready.", error);
+      const demo = buildStaticCatalogue();
+      demo.fallbackReason = "The live catalogue could not be reached. Sample products and sample prices are being displayed.";
+      return demo;
     }
-    const categories = (categoryResult.data || []).map(normalizeCategory);
-    const activeCategoryIds = new Set(categories.map((category) => category.id));
-    const products = (productResult.data || [])
-      .filter(function (product) {
-        return !product.category_id || activeCategoryIds.has(product.category_id);
-      })
-      .map(normalizeProduct);
-    return { categories, products };
   }
 
   async function loadAll(options) {
@@ -287,30 +336,28 @@
     )}" width="800" height="1000" loading="lazy" decoding="async" data-fallback="${PLACEHOLDER_IMAGE}"`;
   }
 
-  function priceMarkup(product) {
+  function priceMarkup(product, selectedVariant) {
     if (!product.hasVariants) {
       return '<span class="product-card__coming">Pricing to be confirmed</span>';
     }
-    if (product.lowestPricePaise === null) {
+    if (!selectedVariant || selectedVariant.effectivePricePaise === null) {
       return '<span class="product-card__coming">Pricing to be confirmed</span>';
     }
-    const from = product.variants.length > 1 ? '<span class="price--from">From</span>' : "";
     const old =
-      product.onSale && product.lowestRegularPricePaise > product.lowestPricePaise
-        ? `<span class="price-old">${Kayam.formatMoney(product.lowestRegularPricePaise)}</span>`
+      selectedVariant.onSale && selectedVariant.pricePaise > selectedVariant.effectivePricePaise
+        ? `<span class="price-old">${Kayam.formatMoney(selectedVariant.pricePaise)}</span>`
         : "";
-    return `${from}<span class="price${product.onSale ? " price--sale" : ""}">${Kayam.formatMoney(
-      product.lowestPricePaise,
+    return `<span class="price" data-product-price>${Kayam.formatMoney(
+      selectedVariant.effectivePricePaise,
     )}</span>${old}`;
   }
 
   function renderProductCard(product) {
     const defaultVariant = primaryVariant(product);
     const canAdd = Boolean(defaultVariant && defaultVariant.inStock);
-    const weights = product.variants
-      .slice(0, 3)
+    const options = product.variants
       .map(function (variant) {
-        return `<span class="weight-chip">${Kayam.escapeHTML(variant.label)}</span>`;
+        return `<option value="${Kayam.escapeHTML(variant.id)}" data-price-paise="${variant.effectivePricePaise}" data-in-stock="${variant.inStock ? "true" : "false"}" data-is-demo="${variant.isDemo ? "true" : "false"}"${defaultVariant && defaultVariant.id === variant.id ? " selected" : ""}${variant.inStock ? "" : " disabled"}>${Kayam.escapeHTML(variant.label)} · ${Kayam.formatMoney(variant.effectivePricePaise)}</option>`;
       })
       .join("");
     const availability = !product.hasVariants
@@ -334,6 +381,7 @@
           product.id,
         )}" data-add-variant="${Kayam.escapeHTML(defaultVariant.id)}">Add to cart</button>`
       : `<a class="btn btn--outline btn--small btn--block" href="${productUrl(product)}">View details</a>`;
+    const demoFlag = defaultVariant && defaultVariant.isDemo;
 
     return `<article class="product-card" data-product-card="${Kayam.escapeHTML(product.id)}">
       <a class="product-card__media" href="${productUrl(product)}" aria-label="View ${Kayam.escapeHTML(product.name)}">
@@ -345,9 +393,9 @@
         <p class="product-card__category">${Kayam.escapeHTML(product.categoryName)}</p>
         <h3 class="product-card__title"><a href="${productUrl(product)}">${Kayam.escapeHTML(product.name)}</a></h3>
         <p class="product-card__desc">${Kayam.escapeHTML(product.short_description || "Product details coming soon.")}</p>
-        ${weights ? `<div class="product-card__weights" aria-label="Available weights">${weights}</div>` : ""}
+        ${product.variants.length ? `<label class="product-card__variant-label" for="weight-${Kayam.escapeHTML(product.slug)}">Choose pack size</label><select class="product-card__weight-select" id="weight-${Kayam.escapeHTML(product.slug)}" data-product-variant-select aria-label="Choose pack size for ${Kayam.escapeHTML(product.name)}">${options}</select>` : ""}
         <div class="product-card__footer">
-          <div class="product-card__price">${priceMarkup(product)}</div>
+          <div class="product-card__price">${priceMarkup(product, defaultVariant)}<span class="product-card__sample-label"${demoFlag ? "" : " hidden"}>Sample price</span></div>
           ${availability}
         </div>
         <div class="product-card__actions">${action}</div>
@@ -372,6 +420,24 @@
   function setupCardActions(container) {
     if (!container || container.dataset.cardActionsBound === "true") return;
     container.dataset.cardActionsBound = "true";
+    container.addEventListener("change", function (event) {
+      const select = event.target.closest("[data-product-variant-select]");
+      if (!select) return;
+      const card = select.closest("[data-product-card]");
+      const option = select.selectedOptions[0];
+      if (!card || !option) return;
+      const variantId = select.value;
+      const pricePaise = Number(option.dataset.pricePaise);
+      const available = option.dataset.inStock === "true";
+      const priceNode = card.querySelector("[data-product-price]");
+      const sampleNode = card.querySelector(".product-card__sample-label");
+      if (priceNode && Number.isFinite(pricePaise)) priceNode.textContent = Kayam.formatMoney(pricePaise);
+      if (sampleNode) sampleNode.hidden = option.dataset.isDemo !== "true";
+      card.querySelectorAll("[data-add-product]").forEach(function (button) {
+        button.dataset.addVariant = variantId;
+        button.disabled = !available;
+      });
+    });
     container.addEventListener("click", function (event) {
       const button = event.target.closest("[data-add-product][data-add-variant]");
       if (!button) return;
