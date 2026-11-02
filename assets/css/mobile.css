@@ -2803,3 +2803,28 @@ body[data-page="home"] .hero__copy {
   .catalogue-demo-banner span:not(.catalogue-demo-banner__mark) { font-size: 0.66rem; }
   .order-step { padding: 0.85rem; }
 }
+
+
+.demo-price-note {
+  display: block;
+  margin-top: 0.45rem;
+  color: #9a4a25;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.product-card__price [data-product-price] {
+  display: inline-block;
+}
+
+.product-card__weight-select:focus-visible {
+  border-color: var(--gold);
+  outline: 2px solid rgba(178, 139, 67, 0.32);
+  outline-offset: 2px;
+}
+
+@media (min-width: 1200px) {
+  .product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .category-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
