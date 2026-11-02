@@ -299,7 +299,7 @@
       ? ""
       : `<div class="announcement-bar" data-announcement>
           <div class="container announcement-bar__inner">
-            <span>Delivery details and payment are confirmed personally on WhatsApp</span>
+            <span>Shop online with KAYAM — delivery and payment are confirmed personally on WhatsApp</span>
             <button class="announcement-bar__close" type="button" data-dismiss-announcement aria-label="Dismiss announcement">${icon("close")}</button>
           </div>
         </div>`;
@@ -326,7 +326,7 @@
       <header class="site-header">
         <div class="container--wide header-inner">
           <a class="brand" href="index.html" aria-label="KAYAM SPICES home">
-            <img class="brand__logo brand__logo--header" src="assets/images/kayam-wordmark-light.svg" alt="KAYAM SPICES" width="460" height="118" decoding="async">
+            <img class="brand__logo brand__logo--header" src="assets/images/kayam-spices-logo.jpeg" alt="KAYAM SPICES" width="859" height="655" decoding="async">
           </a>
           <nav class="primary-nav" aria-label="Primary navigation">
             <ul class="primary-nav__list">${navMarkup}</ul>
@@ -344,7 +344,7 @@
         <div class="nav-drawer__panel">
           <div class="nav-drawer__top">
             <a class="brand brand--drawer" href="index.html" aria-label="KAYAM SPICES home">
-              <img class="brand__logo" src="assets/images/kayam-wordmark.svg" alt="KAYAM SPICES" width="460" height="118" decoding="async">
+              <img class="brand__logo" src="assets/images/kayam-spices-logo.jpeg" alt="KAYAM SPICES" width="859" height="655" decoding="async">
             </a>
             <button class="nav-drawer__close" type="button" data-menu-close aria-label="Close navigation menu">${icon("close")}</button>
           </div>
@@ -368,9 +368,9 @@
       <div class="container footer-main">
         <div class="footer-brand">
           <div class="footer-brand__lockup">
-            <img class="footer-brand__logo" src="assets/images/kayam-wordmark-light.svg" alt="KAYAM SPICES" width="460" height="118" loading="lazy" decoding="async">
+            <img class="footer-brand__logo" src="assets/images/kayam-spices-logo.jpeg" alt="KAYAM SPICES" width="859" height="655" loading="lazy" decoding="async">
           </div>
-          <p>Pure spices and traditional Indian blends for the everyday table. Explore the pantry, choose your weight, and confirm your order personally on WhatsApp.</p>
+          <p>Pure spices and traditional Indian blends for the everyday table. Browse the pantry, add your favourites to the website cart, and confirm delivery details with us on WhatsApp.</p>
         </div>
         <div class="footer-col">
           <h2>Explore</h2>
@@ -398,7 +398,7 @@
           <div class="footer-contact">
             <a href="${escapeHTML(whatsappUrl)}" target="_blank" rel="noopener">${icon("whatsapp")} +91 788 806 0231</a>
             <a href="mailto:${escapeHTML(email)}">${icon("mail")} ${escapeHTML(email)}</a>
-            <p>Delivery availability, delivery charges, and payment are confirmed directly by KAYAM SPICES on WhatsApp.</p>
+            <p>Your website order is saved first. Delivery availability, delivery charges, and payment arrangements are then confirmed by KAYAM SPICES on WhatsApp.</p>
           </div>
         </div>
       </div>
