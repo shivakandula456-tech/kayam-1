@@ -52,12 +52,29 @@ select
   false, 0, true, true, d.display_order
 from demo_prices d
 join public.products p on p.slug = d.product_slug
-on conflict (product_id, weight_value, weight_unit) do update
-set price = excluded.price,
-    sale_price = excluded.sale_price,
-    track_stock = excluded.track_stock,
-    stock_quantity = excluded.stock_quantity,
-    is_active = excluded.is_active,
-    is_demo = true,
-    display_order = excluded.display_order,
-    updated_at = now();
+on conflict (product_id, weight_value, weight_unit) do nothing;
+
+-- Enforce the demonstration-price lock even when an older create_order RPC
+-- is already installed and has not yet been replaced by the updated schema.
+create or replace function public.reject_demo_variant_order_items()
+returns trigger
+language plpgsql
+set search_path = public, pg_temp
+as $
+begin
+  if new.variant_id is not null and exists (
+    select 1
+    from public.product_variants v
+    where v.id = new.variant_id
+      and v.is_demo is true
+  ) then
+    raise exception 'DEMO_PRICE: This pack size still has a demonstration price. Confirm or replace it in Admin > Products before accepting live orders.';
+  end if;
+  return new;
+end;
+$;
+
+drop trigger if exists order_items_reject_demo_price on public.order_items;
+create trigger order_items_reject_demo_price
+before insert or update of variant_id on public.order_items
+for each row execute function public.reject_demo_variant_order_items();
