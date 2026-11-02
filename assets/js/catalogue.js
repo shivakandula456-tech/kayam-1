@@ -176,6 +176,7 @@
       lowestRegularPricePaise: lowest ? lowest.pricePaise : null,
       onSale: Boolean(lowest && lowest.onSale),
       isOutOfStock: variants.length > 0 && availableVariants.length === 0,
+      hasDemoPrices: variants.some((variant) => variant.isDemo),
       displayOrder: Number(product.display_order) || 0,
     };
   }
