@@ -67,9 +67,11 @@
   }
 
   function summaryMarkup() {
-    const canCheckout = cartState.canCheckout;
     const hasDemoPrices = cartState.lines.some((line) => line.variant && line.variant.isDemo);
-    const blocked = cartState.hasUnavailable
+    const canCheckout = cartState.canCheckout && !hasDemoPrices;
+    const blocked = hasDemoPrices
+      ? "Sample weights and prices must be confirmed in Admin before an order can be submitted."
+      : cartState.hasUnavailable
       ? "Remove unavailable items to continue."
       : cartState.hasPriceChanges
         ? "Review and accept the updated prices to continue."
