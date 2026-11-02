@@ -153,7 +153,7 @@
     if (!product.variants.length) {
       return `<div class="alert alert--warning" role="status">
         <span aria-hidden="true">${Kayam.icon("info")}</span>
-        <div><strong class="alert__title">Pricing is being finalised</strong>This product is in the KAYAM SPICES pantry, but its weight options and prices have not been published yet. Please contact us for details.</div>
+        <div><strong class="alert__title">Pricing is being finalised</strong>Sample pack sizes and prices are shown for storefront testing. Final ingredients, product details, stock settings and retail prices must be confirmed by KAYAM SPICES.</div>
       </div>
       <div class="purchase-row" style="margin-top: 1rem;">
         <a class="btn btn--whatsapp btn--block" id="product-whatsapp" href="https://wa.me/917888060231" target="_blank" rel="noopener">${Kayam.icon("whatsapp")} Enquire on WhatsApp</a>
