@@ -2544,3 +2544,166 @@ body[data-page="home"] #site-header.is-fixed [data-announcement] {
     transition: none;
   }
 }
+
+
+/* KAYAM SPICES client brand refresh — complete logo and brighter homepage */
+.brand__logo--header {
+  width: 106px;
+  height: 81px;
+  object-fit: contain;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.brand--drawer .brand__logo {
+  width: 124px;
+  height: 95px;
+  object-fit: contain;
+  border: 0;
+  border-radius: 9px;
+  box-shadow: none;
+}
+
+.footer-brand__logo {
+  display: block;
+  width: min(190px, 100%);
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.footer-brand__lockup {
+  align-items: flex-start;
+}
+
+body[data-page="home"] {
+  --forest: #274c34;
+  --forest-deep: #142d21;
+  --forest-soft: #4b7650;
+  --gold: #d99c22;
+  --gold-bright: #f1b83f;
+  --gold-soft: #f8d98f;
+  --ivory: #fff8eb;
+  --ivory-deep: #f1dfc4;
+  --ivory-warm: #fff0d7;
+  --spice-red: #c94b32;
+  --spice-red-dark: #963923;
+  --muted: #6d6255;
+  --ink: #2a2922;
+}
+
+body[data-page="home"] .announcement-bar {
+  background: linear-gradient(90deg, #873323, #b4432e);
+  color: #fff1d5;
+}
+
+body[data-page="home"] .hero__scrim {
+  background:
+    linear-gradient(180deg, rgba(15, 42, 27, 0.34) 0%, rgba(15, 42, 27, 0.08) 38%, rgba(15, 42, 27, 0.78) 100%),
+    linear-gradient(90deg, rgba(15, 42, 27, 0.86) 0%, rgba(15, 42, 27, 0.42) 52%, rgba(15, 42, 27, 0.12) 100%);
+}
+
+body[data-page="home"] .hero__texture {
+  opacity: 0.48;
+  background-image:
+    radial-gradient(circle at 18% 24%, rgba(245, 185, 64, 0.22), transparent 32%),
+    radial-gradient(circle at 82% 76%, rgba(203, 73, 48, 0.16), transparent 28%),
+    linear-gradient(115deg, transparent 30%, rgba(255, 218, 136, 0.08) 50%, transparent 70%);
+}
+
+body[data-page="home"] .hero__kicker {
+  color: #ffe1a0;
+}
+
+body[data-page="home"] .hero__title em {
+  color: #ffd36b;
+}
+
+body[data-page="home"] .promise-strip {
+  background: linear-gradient(105deg, #fff5e5 0%, #f9e8ca 52%, #fff4e1 100%);
+  color: #29372b;
+}
+
+body[data-page="home"] .promise-item__icon {
+  color: #bd482f;
+}
+
+body[data-page="home"] .section--ivory {
+  background: linear-gradient(135deg, #fff4e2 0%, #fffaf0 55%, #f9ead1 100%);
+}
+
+body[data-page="home"] .section--green {
+  background: linear-gradient(125deg, #183d29 0%, #315c3b 58%, #3f6740 100%);
+}
+
+body[data-page="home"] .cta-band {
+  background: linear-gradient(115deg, #8f3526 0%, #bd472e 54%, #d16a39 100%);
+}
+
+.hero__brand-panel {
+  justify-self: end;
+  width: min(100%, 420px);
+  margin-block: 0.5rem;
+  animation: hero-rise 950ms var(--ease) 560ms both;
+}
+
+.hero__brand-art {
+  width: 100%;
+  aspect-ratio: 859 / 655;
+  object-fit: contain;
+  border: 1px solid rgba(248, 217, 143, 0.5);
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(6, 19, 12, 0.38), 0 0 0 8px rgba(255, 239, 207, 0.045);
+}
+
+.hero__brand-caption {
+  margin-top: 0.85rem;
+  color: rgba(255, 248, 235, 0.82);
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-style: italic;
+  letter-spacing: 0.035em;
+  text-align: center;
+}
+
+.home-shop-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .brand__logo--header {
+    width: 112px;
+    height: 85px;
+  }
+}
+
+@media (max-width: 899px) {
+  .brand__logo--header {
+    width: 82px;
+    height: 63px;
+  }
+
+  .brand--drawer .brand__logo {
+    width: 112px;
+    height: 85px;
+  }
+
+  .hero__brand-panel {
+    display: none;
+  }
+
+  .home-shop-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 520px) {
+  .footer-brand__logo {
+    width: 164px;
+  }
+}
