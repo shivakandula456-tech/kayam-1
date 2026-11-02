@@ -271,16 +271,21 @@
         selectedVariant.onSale && selectedVariant.salePricePaise !== null
           ? `<span class="price-old">${Kayam.formatMoney(selectedVariant.pricePaise)}</span>`
           : "";
+      const demoNote = selectedVariant.isDemo
+        ? '<span class="demo-price-note">Sample price · Admin must confirm or replace before live orders.</span>'
+        : "";
       priceNode.innerHTML = `<span class="price${selectedVariant.onSale ? " price--sale" : ""}">${Kayam.formatMoney(
         selectedVariant.effectivePricePaise,
-      )}</span>${oldPrice}<span class="price--from">${Kayam.escapeHTML(selectedVariant.label)}</span>`;
+      )}</span>${oldPrice}<span class="price--from">${Kayam.escapeHTML(selectedVariant.label)}</span>${demoNote}`;
     }
     if (stockNode) {
-      stockNode.textContent = selectedVariant.inStock
-        ? selectedVariant.trackStock
-          ? `In stock · ${selectedVariant.stockQuantity} available`
-          : "In stock"
-        : "This weight is currently out of stock.";
+      stockNode.textContent = selectedVariant.isDemo
+        ? "Demonstration price · final price will be confirmed by KAYAM SPICES"
+        : selectedVariant.inStock
+          ? selectedVariant.trackStock
+            ? `In stock · ${selectedVariant.stockQuantity} available`
+            : "In stock"
+          : "This weight is currently out of stock.";
       stockNode.classList.toggle("product-info__stock--out", !selectedVariant.inStock);
     }
     if (addButton) addButton.disabled = !selectedVariant.inStock;
