@@ -67,9 +67,8 @@
     const container = document.getElementById("featured-products");
     const title = document.getElementById("featured-title");
     if (!container) return;
-    const featured = data.products.filter((product) => product.is_featured);
-    const selection = (featured.length ? featured : data.products).slice(0, 4);
-    if (title && !featured.length) title.textContent = "From our pantry.";
+    const selection = data.products.slice(0, 11);
+    if (title) title.textContent = "The KAYAM Collection.";
     if (!selection.length) {
       container.innerHTML = `<div class="empty-state">
         <span class="empty-state__icon">${Kayam.icon("bag")}</span>
@@ -84,6 +83,22 @@
     }
     container.innerHTML = `<div class="product-grid">${selection.map(Kayam.Catalogue.renderProductCard).join("")}</div>`;
     Kayam.Catalogue.setupCardActions(container);
+  }
+
+  function renderCatalogueNotice(data) {
+    const notice = document.getElementById("catalogue-notice");
+    if (!notice) return;
+    const sampleActive = Boolean(data.isDemoMode || data.products.some((product) => product.hasDemoPrices));
+    if (!sampleActive) {
+      notice.hidden = true;
+      notice.innerHTML = "";
+      return;
+    }
+    notice.hidden = false;
+    notice.innerHTML = `<div class="catalogue-demo-banner" role="status">
+      <span class="catalogue-demo-banner__mark" aria-hidden="true">i</span>
+      <div><strong>Sample weights and prices are active.</strong><span>These are demonstration values for the initial storefront. Replace or confirm every weight and price in the Admin product editor before accepting live orders.</span></div>
+    </div>`;
   }
 
   function renderError(error) {
@@ -126,6 +141,7 @@
     if (!document.getElementById("featured-products")) return;
     try {
       const data = await Kayam.Catalogue.loadAll();
+      renderCatalogueNotice(data);
       renderCategories(data);
       renderFeatured(data);
     } catch (error) {
